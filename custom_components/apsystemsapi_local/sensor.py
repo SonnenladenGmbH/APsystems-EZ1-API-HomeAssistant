@@ -39,16 +39,6 @@ async def async_setup_platform(
 
     sensors = [
         PowerSensorTotal(api, device_name=config[CONF_NAME], sensor_name="Total Power", sensor_id="total_power"),
-        Panel1PowerSensor(api, device_name=config[CONF_NAME], sensor_name="Panel 1 Power", sensor_id="panel_1_power"),
-        Panel2PowerSensor(api, device_name=config[CONF_NAME], sensor_name="Panel 2 Power", sensor_id="panel_2_power"),
-        Panel1LifetimeEnergy(api, device_name=config[CONF_NAME], sensor_name="Panel 1 Lifetime Production",
-                             sensor_id="panel_1_lifetime_production"),
-        Panel2LifetimeEnergy(api, device_name=config[CONF_NAME], sensor_name="Panel 2 Lifetime Production",
-                             sensor_id="panel_2_lifetime_production"),
-        Panel1TodayEnergy(api, device_name=config[CONF_NAME], sensor_name="Panel 1 Today Production",
-                          sensor_id="panel_1_today_production"),
-        Panel2TodayEnergy(api, device_name=config[CONF_NAME], sensor_name="Panel 2 Today Production",
-                          sensor_id="panel_2_today_production"),
         LifetimeEnergy(api, device_name=config[CONF_NAME], sensor_name="Lifetime Production",
                        sensor_id="lifetime_production"),
         TodayEnergy(api, device_name=config[CONF_NAME], sensor_name="Today Production",
@@ -60,6 +50,7 @@ async def async_setup_platform(
 class BaseSensor(SensorEntity):
     """Representation of an APsystem sensor."""
     _attr_available = True
+    _attributes = {}
 
     def __init__(self, api: APsystemsEZ1M, device_name: str, sensor_name: str, sensor_id: str):
         """Initialize the sensor."""
@@ -94,6 +85,11 @@ class BaseSensor(SensorEntity):
             model="EZ1-M",
         )
 
+    @property
+    def extra_state_attributes(self):
+        """Return entity specific state attributes."""
+        return self._attributes
+
 
 class BasePowerSensor(BaseSensor):
     _device_class = SensorDeviceClass.POWER
@@ -105,25 +101,9 @@ class BasePowerSensor(BaseSensor):
 class PowerSensorTotal(BasePowerSensor):
     async def async_update(self):
         try:
-            self._state = await self._api.get_total_output()
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel1PowerSensor(BasePowerSensor):
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).p1
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel2PowerSensor(BasePowerSensor):
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).p2
+            data = await self._api.get_output_data()
+            self._attributes = {"p1": data.p1, "p2": data.p2}
+            self._state = data.p1 + data.p2
             self._attr_available = True
         except client_exceptions.ClientConnectionError:
             self._attr_available = False
@@ -140,51 +120,9 @@ class LifetimeEnergy(BaseEnergySensor):
 
     async def async_update(self):
         try:
-            self._state = await self._api.get_total_energy_lifetime()
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel1LifetimeEnergy(BaseEnergySensor):
-    _attr_state_class = SensorStateClass.TOTAL
-
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).te1
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel2LifetimeEnergy(BaseEnergySensor):
-    _attr_state_class = SensorStateClass.TOTAL
-
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).te2
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel1TodayEnergy(BaseEnergySensor):
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
-
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).e1
-            self._attr_available = True
-        except client_exceptions.ClientConnectionError:
-            self._attr_available = False
-
-
-class Panel2TodayEnergy(BaseEnergySensor):
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
-
-    async def async_update(self):
-        try:
-            self._state = (await self._api.get_output_data()).e2
+            data = await self._api.get_output_data()
+            self._attributes = {"p1": data.te1, "p2": data.te2}
+            self._state = data.te1 + data.te2
             self._attr_available = True
         except client_exceptions.ClientConnectionError:
             self._attr_available = False
@@ -195,7 +133,11 @@ class TodayEnergy(BaseEnergySensor):
 
     async def async_update(self):
         try:
-            self._state = await self._api.get_total_energy_today()
+            data = await self._api.get_output_data()
+            self._attributes = {"p1": data.e1, "p2": data.e2}
+            self._state = data.e1 + data.e2
             self._attr_available = True
         except client_exceptions.ClientConnectionError:
             self._attr_available = False
+
+
