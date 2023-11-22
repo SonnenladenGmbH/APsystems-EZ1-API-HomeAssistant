@@ -71,7 +71,6 @@ class MaxPower(SwitchEntity):
         return f"APsystems {self._device_name} {self._name}"
 
     async def async_turn_on(self, **kwargs):
-        print("SWITCHING ON")
         try:
             await self._api.set_device_power_status(0)
             self._attr_available = True
@@ -79,7 +78,6 @@ class MaxPower(SwitchEntity):
             self._attr_available = False
 
     async def async_turn_off(self, **kwargs):
-        print("SWITCHING OFF")
         try:
             await self._api.set_device_power_status(1)
             self._attr_available = True
