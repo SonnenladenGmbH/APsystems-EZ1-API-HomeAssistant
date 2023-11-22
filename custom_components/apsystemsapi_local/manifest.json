@@ -3,7 +3,7 @@
   "integration_type": "device",
   "name": "APsystems API",
   "codeowners": [
-    "@mawoka-myblock"
+    "@SonnenladenGmbH"
   ],
   "config_flow": false,
   "dependencies": [],
