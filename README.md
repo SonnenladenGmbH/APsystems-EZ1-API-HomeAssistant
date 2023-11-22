@@ -58,6 +58,7 @@ The local API access needs to be activated once in the settings of the EZ1. Plea
 <li>Step 4: Switch to the "Local Mode" section.</li>
 <li>Step 5: Activate local mode and select "Continuous"</li>
 <li>Step 6: Done! Make a note of the IP address for future reference.</li>
+(To ensure a successful connection to your Wi-Fi network, it's essential to first set up your device using the standard procedure outlined in the APsystems Quickstart Guide. This initial setup is a crucial step before proceeding with any further configurations or usage.)
 </ul>
 
 ## Installation (IMPORTANT)
