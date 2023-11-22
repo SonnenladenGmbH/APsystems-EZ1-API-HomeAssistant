@@ -11,4 +11,9 @@ number:
   - platform: apsystemsapi_local
     ip_address: [YOUR_IP_ADDRESS]
     name: [SOME_ARBITRARY_NAME]
+
+switch:
+  - platform: apsystemsapi_local
+    ip_address: [YOUR_IP_ADDRESS]
+    name: [SOME_ARBITRARY_NAME]
 ```
