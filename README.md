@@ -63,113 +63,20 @@ The local API access needs to be activated once in the settings of the EZ1. Plea
 ## Installation (IMPORTANT)
 Please note that **this is not a regular HA add-on** that can be installed by just searching for it inside the add-on store. For this HA-Integration to work, **you need to install HACS (Home Assistant Community Store)** first.<br>
 <br>
-Please follow this great 4 minute step-by-step guide by  to install HACS. After that return to this page to install our APsystems Integration:<br>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Q8Gj0LiklRE?si=8Cx8zSbll77OeXzo&amp;controls=0&amp;start=44" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-
+**Please follow our 4-Step guide to successfully get this Integration running:**
+1. After you set up your Home Assistant instance please follow this 3 minute video on how to install HACS: [How to install HACS within only 3 minutes [YouTube]](https://youtu.be/Q8Gj0LiklRE?si=_YqpNZ2yOE5sRUjd&t=44)<br>
+2. Now that HACS is installed go to its dashboard and click the three small dots in the upper right corner. Select `Custom repositories` and add this URL ( Category = Integration)
 ```bash
-pip install apsystems-ez1
+https://github.com/SonnenladenGmbH/APsystems-EZ1-API-HomeAssistant
 ```
-- NOTE: You need to have pip installed on your system. See the following guide to do so: https://pip.pypa.io/en/stable/installation/
+3. After adding our tntegration you can search for it by `APsystems Local API` using the search of HACS. Then download and install it.
+4. Before you can configure a new device you need to restart Home Assistant.
+5. You have now successfully installed our APsystems HA Integration 🎉🌳
 
-## Python Compatibility
-- We tested our library on multiple platforms and python versions and can confirm functionality:
-<table>
-<tbody>
-<tr>
-<th>Language</th>
-<th> -Version- </th>
-<th>OS</th>
-<th>Plattform</th>
-<th>Support / Compatibility</th>
-</tr>
-<tr>
-<td align="center">
-<p><strong>Python:</strong></p>
+## Add an new device to Home Assistant
+Adding your first APsystems inverter to Home Assistant is very easy and straigt forward.
+1. to be continued...
 
-<td align="center">
-<p>Python 3.8</p>
-<p>Python 3.9</p>
-<p>Python 3.10</p>
-<p>Python 3.11</p>
-<p>Python 3.12</p>
-</td>
-<td align="center">
-<p>MacOS</p>
-<p>Linux</p>
-<p>Windows</p>
-<p>etc.</p>
-</td>
-<td align="center">
-<p>PCs and Laptops</p>
-<p>Home Servers</p>
-<p>Virtual Machines</p>
-<p>Single Board Computers (Raspberry Pi)</p>
-</td>
-<td align="center"><img src="https://img.icons8.com/?size=96&id=sz8cPVwzLrMP&format=png" alt="Compatible-Checkmark" width="30" /></td>
-</tr>
-<tr>
-<td align="center">
-<p><strong>MicroPython:</strong></p>
-<td align="center">
-<p>N/A</p>
-</td>
-<td align="center">
-<p>MicroPython as a Firmware</p>
-</td>
-<td align="center">
-<p>Raspbery Pi Pico</p>
-<p>ESP8266 and ESP32</p>
-<p>STM32 Microcontrollers</p>
-<p>Teensy, Pyboard</p>
-
-<p>and many more..</p>
-</td>
-<td align="center"><img src="https://img.icons8.com/?size=96&id=T9nkeADgD3z6&format=png" alt="Compatible-Checkmark" width="30" />
-<p>We're working on it...</p>
-</td>
-</tr>
-</tbody>
-</table>
-
-## Usage
-Here's a quick example of how to use the APsystemsEZ1 library:
-
-```python
-from APsystemsEZ1 import APsystemsEZ1M # import the library
-import asyncio # this is an async based lib so we have to import asynchio
-
-inverter = APsystemsEZ1M("192.168.1.100", 8050) # initialize an inverter on "192.168.1.100"
-
-async def main():
-    # Get device information
-    device_info = await inverter.get_device_info()
-    print("Device Information:", device_info)
-
-    # Get device information
-    device_info = await inverter.get_device_info()
-    print("Device Information:", device_info)
-
-    # Get alarm information
-    alarm_info = await inverter.get_alarm_info()
-    print("Alarm Information:", alarm_info)
-
-    # Get output data
-    output_data = await inverter.get_output_data()
-    print("Output Data:", output_data)
-
-    # Set maximum power limit
-    await inverter.set_max_power(500)
-
-    # Get current power status
-    power_status = await inverter.get_device_power_status()
-    print("Power Status:", power_status)
-
-# Run the main coroutine
-asyncio.run(main())
-```
-
-- More examples can be found in our Wiki.
 
 ## Methods
 The library includes several methods to interact with the microinverter. You can find all of them with comprehensive docs ion our GitHub Pages.
@@ -186,13 +93,11 @@ The library includes several methods to interact with the microinverter. You can
 * for a more detailed documentation see our GitHub Pages.
 ## Recommendations
 - We highly recommend to set a **static IP** for the inverter you want to interact with. This can be achieved be accessing your local router, searching for the inverters IP and setting it to "static ip" or similar. A quick Google search will tell you how to do it exactly for your specific router model.
-## Error Handling
-The library includes basic error handling for HTTP and connection errors.
 
 ## Contribute to this project
-- Everyone is invited to commit changes to this library. This is considered a community project to realise countless projects that may need very specific new functionality. We're happy to see your ideas ;)
+- Everyone is invited to commit changes to this integration. This is considered a community project to realise countless projects that may need very specific new functionality. We're happy to see your ideas ;)
 - You're also welcome to request new features to be built natively into the inverters API. We're in close contact with APsystems and happy to add new features in the future.
 ## License
-This library is released under the MIT License.
+This project is released under the MIT License.
 
 ---
