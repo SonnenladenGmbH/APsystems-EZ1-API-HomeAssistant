@@ -4,6 +4,7 @@ import asyncio
 from dataclasses import dataclass
 from collections.abc import Callable, Coroutine
 from aiohttp import client_exceptions
+from homeassistant import config_entries
 
 import voluptuous as vol
 
@@ -20,6 +21,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from .apsystems_local_api import APsystemsEZ1M
+from .const import DOMAIN
 from homeassistant.helpers.device_registry import DeviceInfo
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
@@ -28,13 +30,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(
+async def async_setup_entry(
         hass: HomeAssistant,
-        config: ConfigType,
+        config_entry: config_entries.ConfigEntry,
         add_entities: AddEntitiesCallback,
         discovery_info: DiscoveryInfoType | None = None
 ) -> None:
     """Set up the sensor platform."""
+    config = hass.data[DOMAIN][config_entry.entry_id]
     api = APsystemsEZ1M(ip_address=config[CONF_IP_ADDRESS])
 
     sensors = [
@@ -105,7 +108,7 @@ class PowerSensorTotal(BasePowerSensor):
             self._attributes = {"p1": data.p1, "p2": data.p2}
             self._state = data.p1 + data.p2
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
 
 
@@ -124,7 +127,7 @@ class LifetimeEnergy(BaseEnergySensor):
             self._attributes = {"p1": data.te1, "p2": data.te2}
             self._state = data.te1 + data.te2
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
 
 
@@ -137,7 +140,5 @@ class TodayEnergy(BaseEnergySensor):
             self._attributes = {"p1": data.e1, "p2": data.e2}
             self._state = data.e1 + data.e2
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
-
-

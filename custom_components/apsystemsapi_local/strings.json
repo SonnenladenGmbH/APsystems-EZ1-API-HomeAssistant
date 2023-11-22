@@ -1,0 +1,15 @@
+{
+  "config": {
+    "error": {},
+    "step": {
+      "user": {
+        "data": {
+          "name": "The name of your device",
+          "ip_address": "The IP address of your device"
+        },
+        "description": "Enter your GitHub credentials.",
+        "title": "Authentication"
+      }
+    }
+  }
+}

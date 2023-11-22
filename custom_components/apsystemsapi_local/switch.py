@@ -9,12 +9,15 @@ from homeassistant.components.switch import (
     PLATFORM_SCHEMA
 )
 import homeassistant.helpers.config_validation as cv
+from homeassistant import config_entries
 from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from .apsystems_local_api import APsystemsEZ1M, Status
 from homeassistant.helpers.device_registry import DeviceInfo
+from .const import DOMAIN
+import asyncio
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_IP_ADDRESS): cv.string,
@@ -22,13 +25,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-async def async_setup_platform(
+async def async_setup_entry(
         hass: HomeAssistant,
-        config: ConfigType,
+        config_entry: config_entries.ConfigEntry,
         add_entities: AddEntitiesCallback,
         discovery_info: DiscoveryInfoType | None = None
 ) -> None:
     """Set up the sensor platform."""
+    config = hass.data[DOMAIN][config_entry.entry_id]
     api = APsystemsEZ1M(ip_address=config[CONF_IP_ADDRESS])
 
     numbers = [
@@ -58,7 +62,7 @@ class MaxPower(SwitchEntity):
             else:
                 self._state = False
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
 
     @property
@@ -74,14 +78,14 @@ class MaxPower(SwitchEntity):
         try:
             await self._api.set_device_power_status(0)
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except ((client_exceptions.ClientConnectionError, asyncio.TimeoutError), asyncio.TimeoutError):
             self._attr_available = False
 
     async def async_turn_off(self, **kwargs):
         try:
             await self._api.set_device_power_status(1)
             self._attr_available = True
-        except client_exceptions.ClientConnectionError:
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
 
     @property
