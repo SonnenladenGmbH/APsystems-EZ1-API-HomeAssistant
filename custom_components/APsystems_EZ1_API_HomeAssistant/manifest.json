@@ -1,0 +1,16 @@
+{
+  "domain": "APsystems_EZ1_API_HomeAssistant",
+  "integration_type": "device",
+  "name": "APsystems API",
+  "codeowners": [
+    "@mawoka-myblock"
+  ],
+  "config_flow": false,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/APsystems_EZ1_API_HomeAssistant",
+  "homekit": {},
+  "iot_class": "local_polling",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": []
+}
