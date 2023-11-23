@@ -14,7 +14,7 @@ from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from .apsystems_local_api import APsystemsEZ1M, Status
+from APsystemsEZ1 import APsystemsEZ1M, Status
 from homeassistant.helpers.device_registry import DeviceInfo
 from .const import DOMAIN
 import asyncio

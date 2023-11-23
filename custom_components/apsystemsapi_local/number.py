@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant import config_entries
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from .apsystems_local_api import APsystemsEZ1M
+from APsystemsEZ1 import APsystemsEZ1M
 from .const import DOMAIN
 from homeassistant.helpers.device_registry import DeviceInfo
 

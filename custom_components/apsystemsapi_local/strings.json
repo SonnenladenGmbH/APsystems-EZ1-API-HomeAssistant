@@ -5,7 +5,8 @@
             "user": {
                 "data": {
                     "name": "The name of your device",
-                    "ip_address": "The IP address of your device"
+                    "ip_address": "The IP address of your device",
+                    "check": "Check connection to device"
                 },
                 "description": "Add your Inverter",
                 "title": "Add Device"
