@@ -31,7 +31,7 @@ We offer a range of APsystems products, backed by our expertise in solar energy 
 
 - **Easy & Fast Setup within Home Assistant**
 - **Get detailed device information**
-- **Retrieve alarm status information**
+- **Retrieve alarm status information** (coming soon)
 - **Fetch output data** (power output, energy readings)
 - **Set and get maximum power limits** (30 W up to 800 W)
 - **Manage device power status**
