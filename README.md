@@ -121,6 +121,7 @@ Adding your first APsystems inverter to Home Assistant is straightforward.
 
 ## Explanation
 ![](assets/images/device-overview.png)
+
 The sensors should be pretty self-explanatory, but the controls maybe aren't.
 - `Max Output Power`: Limits the maximal output of the inverter (in watts). It Has to be between 30 and 800.
 - `Power Status`: **Should be switched on**. When it's off, the inverter won't output any power into the gird.
