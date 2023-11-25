@@ -4,7 +4,7 @@
         "step": {
             "user": {
                 "data": {
-                    "name": "Der Name deines Gerätes",
+                    "name": "Der Name deines Geräts",
                     "ip_address": "Die IP Adresse deines Geräts",
                     "check": "Bestätige und teste die Verbindung?"
                 },
