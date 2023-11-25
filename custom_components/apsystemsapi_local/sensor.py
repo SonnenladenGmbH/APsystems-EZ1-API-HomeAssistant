@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Optional
 
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -34,7 +33,7 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: config_entries.ConfigEntry,
     add_entities: AddEntitiesCallback,
-    discovery_info: Optional[DiscoveryInfoType] = None,
+    discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
     """Set up the sensor platform."""
     config = hass.data[DOMAIN][config_entry.entry_id]
@@ -127,7 +126,7 @@ class BaseSensor(SensorEntity):
         return self._state
 
     @property
-    def unique_id(self) -> Optional[str]:
+    def unique_id(self) -> str | None:
         return f"apsystemsapi_{self._device_name}_{self._sensor_id}"
 
     @property
