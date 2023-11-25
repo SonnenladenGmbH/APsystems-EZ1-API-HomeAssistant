@@ -52,7 +52,7 @@ We offer a range of APsystems products, backed by our expertise in solar energy 
 <th>Available to purchase at:</th>
 </tr>
 <tr>
-<td align="center"><img src="assets/images/APsystems-EZ1-M.png" alt="APsystems EZ1-M Inverter" width="150" /></td>
+<td align="center"><img src="https://github.com/SonnenladenGmbH/APsystems-EZ1-API-HomeAssistant/raw/main/assets/images/APsystems-EZ1-M.png" alt="APsystems EZ1-M Inverter" width="150" /></td>
 <td align="center">
 <p><strong>APsystems EZ1-M</strong></p>
 <p>(Firmware: V1.1.6)</p>
@@ -67,13 +67,13 @@ We offer a range of APsystems products, backed by our expertise in solar energy 
 
 The local API access needs to be activated once in the settings of the EZ1.
 Please follow our Step-By-Step Guide to do so:
-<p><img src="assets/images/APsystems-Lokale-API-Aktivieren-Schritt1-3.png" alt="APsystems EZ1-M Inverter" width="820" /></p>
+<p><img src="https://github.com/SonnenladenGmbH/APsystems-EZ1-API-HomeAssistant/raw/main/assets/images/APsystems-Lokale-API-Aktivieren-Schritt1-3.png" alt="APsystems EZ1-M Inverter" width="820" /></p>
 <ul>
 <li>Step 1: Connect to the inverter using the "Direct Connection" method.</li>
 <li>Step 2: Establish a connection with your inverter.</li>
 <li>Step 3: Select the Settings menu.</li>
 </ul>
-<p><img src="assets/images/APsystems-Lokale-API-Aktivieren-Schritt4-6.png" alt="APsystems EZ1-M Inverter" width="820" /></p>
+<p><img src="https://github.com/SonnenladenGmbH/APsystems-EZ1-API-HomeAssistant/raw/main/assets/images/APsystems-Lokale-API-Aktivieren-Schritt4-6.png" alt="APsystems EZ1-M Inverter" width="820" /></p>
 <ul>
 <li>Step 4: Switch to the "Local Mode" section.</li>
 <li>Step 5: Activate local mode and select "Continuous"</li>
