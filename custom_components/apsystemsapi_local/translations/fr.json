@@ -1,0 +1,19 @@
+{
+    "title": "Interface locale onduleurs APsystems",
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "name": "Le nom de l'appareil",
+                    "ip_address": "L'adresse IP de votre onduleur",
+                    "check": "Vérifier la connexion à l'onduleur"
+                },
+                "description": "Ajoutez votre onduleur",
+                "title": "Ajouter un onduleur"
+            }
+        },
+        "error": {
+            "connection_refused": "L'onduleur n'est pas accessible !"
+        }
+    }
+}
