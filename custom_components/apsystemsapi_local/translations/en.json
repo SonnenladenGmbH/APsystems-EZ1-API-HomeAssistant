@@ -6,14 +6,14 @@
                 "data": {
                     "name": "The name of your device",
                     "ip_address": "The IP address of your device",
-                    "check": "Check connection to device"
+                    "check": "Confirm and test the connection?"
                 },
-                "description": "Add your Inverter",
-                "title": "Add Device"
+                "description": "Add your APsystems inverter:",
+                "title": "Add your device"
             }
         },
         "error": {
-            "connection_refused": "The device can't be reached!"
+            "connection_refused": "The device is not accessible!"
         }
     }
 }

@@ -4,16 +4,16 @@
         "step": {
             "user": {
                 "data": {
-                    "name": "Der Name deines Geräts",
+                    "name": "Der Name deines Gerätes",
                     "ip_address": "Die IP Adresse deines Geräts",
-                    "check": "Prüfe die Verbindung zum Gerät"
+                    "check": "Bestätige und teste die Verbindung?"
                 },
-                "description": "Füge deinen Inverter hinzu",
+                "description": "Füge deinen APsystems-Wechselrichter hinzu:",
                 "title": "Füge dein Gerät hinzu"
             }
         },
         "error": {
-            "connection_refused": "Das Gerät war nicht erreichbar!"
+            "connection_refused": "Das Gerät ist nicht erreichbar!"
         }
     }
 }

@@ -1,0 +1,19 @@
+{
+    "title": "API local de APsystems",
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "name": "El nombre de tu dispositivo",
+                    "ip_address": "La dirección IP de tu dispositivo",
+                    "check": "¿Confirmar y probar la conexión?"
+                },
+                "description": "Agrega tu inversor de APsystems:",
+                "title": "Agrega tu dispositivo"
+            }
+        },
+        "error": {
+            "connection_refused": "¡El dispositivo no está accesible!"
+        }
+    }
+}
