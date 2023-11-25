@@ -46,17 +46,53 @@ async def async_setup_entry(
             sensor_name="Total Power",
             sensor_id="total_power",
         ),
+        PowerSensorTotalP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Total Power P1",
+            sensor_id="total_power_p1",
+        ),
+        PowerSensorTotalP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Total Power P2",
+            sensor_id="total_power_p2",
+        ),
         LifetimeEnergy(
             api,
             device_name=config[CONF_NAME],
             sensor_name="Lifetime Production",
             sensor_id="lifetime_production",
         ),
+        LifetimeEnergyP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Lifetime Production P1",
+            sensor_id="lifetime_production_p1",
+        ),
+        LifetimeEnergyP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Lifetime Production P2",
+            sensor_id="lifetime_production_p2",
+        ),
         TodayEnergy(
             api,
             device_name=config[CONF_NAME],
             sensor_name="Today Production",
             sensor_id="today_production",
+        ),
+        TodayEnergyP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Today Production P1",
+            sensor_id="today_production_p1",
+        ),
+        TodayEnergyP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Today Production_p2",
+            sensor_id="today_production_p2",
         ),
     ]
 
@@ -128,8 +164,26 @@ class BasePowerSensor(BaseSensor):
 
 class PowerSensorTotal(BasePowerSensor):
     def update_state(self, data):
-        self._attributes = {"p1": data.p1, "p2": data.p2}
+        self._attributes = None
         self._state = data.p1 + data.p2
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class PowerSensorTotalP1(BasePowerSensor):
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.p1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class PowerSensorTotalP2(BasePowerSensor):
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.p2
 
     async def async_update(self):
         await self.async_update_data()
@@ -152,12 +206,56 @@ class LifetimeEnergy(BaseEnergySensor):
         await self.async_update_data()
 
 
+class LifetimeEnergyP1(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL
+
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.te1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class LifetimeEnergyP2(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL
+
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.te2
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
 class TodayEnergy(BaseEnergySensor):
     _attr_state_class = SensorStateClass.TOTAL_INCREASING
 
     def update_state(self, data):
-        self._attributes = {"p1": data.e1, "p2": data.e2}
+        self._attributes = None
         self._state = data.e1 + data.e2
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class TodayEnergyP1(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.e1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class TodayEnergyP2(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+
+    def update_state(self, data):
+        self._attributes = None
+        self._state = data.e2
 
     async def async_update(self):
         await self.async_update_data()
