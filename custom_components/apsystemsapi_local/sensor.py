@@ -102,7 +102,7 @@ async def async_setup_entry(
 class BaseSensor(SensorEntity):
     """Representation of an APsystem sensor."""
 
-    _attr_available = False
+    _attr_available = True
 
     def __init__(
         self, api: APsystemsEZ1M, device_name: str, sensor_name: str, sensor_id: str
@@ -141,7 +141,7 @@ class BaseSensor(SensorEntity):
         try:
             data = await self._api.get_output_data()
             self.update_state(data)
-            self._attr_available = False
+            self._attr_available = True
         except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
 
