@@ -1,59 +1,112 @@
 from __future__ import annotations
 
 import asyncio
-from aiohttp import client_exceptions
-from homeassistant import config_entries
 
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
+from aiohttp import client_exceptions
+from APsystemsEZ1 import APsystemsEZ1M
+from homeassistant import config_entries
 from homeassistant.components.sensor import (
+    PLATFORM_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
     SensorStateClass,
-    PLATFORM_SCHEMA
 )
-import homeassistant.helpers.config_validation as cv
-from homeassistant.const import UnitOfPower, UnitOfEnergy
-from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
+from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME, UnitOfEnergy, UnitOfPower
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from APsystemsEZ1 import APsystemsEZ1M
-from .const import DOMAIN
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import DiscoveryInfoType
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_IP_ADDRESS): cv.string,
-    vol.Optional(CONF_NAME, default="solar"): cv.string
-})
+from .const import DOMAIN
+
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_IP_ADDRESS): cv.string,
+        vol.Optional(CONF_NAME, default="solar"): cv.string,
+    }
+)
 
 
 async def async_setup_entry(
-        hass: HomeAssistant,
-        config_entry: config_entries.ConfigEntry,
-        add_entities: AddEntitiesCallback,
-        discovery_info: DiscoveryInfoType | None = None
+    hass: HomeAssistant,
+    config_entry: config_entries.ConfigEntry,
+    add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
     """Set up the sensor platform."""
     config = hass.data[DOMAIN][config_entry.entry_id]
     api = APsystemsEZ1M(ip_address=config[CONF_IP_ADDRESS])
 
     sensors = [
-        PowerSensorTotal(api, device_name=config[CONF_NAME], sensor_name="Total Power", sensor_id="total_power"),
-        LifetimeEnergy(api, device_name=config[CONF_NAME], sensor_name="Lifetime Production",
-                       sensor_id="lifetime_production"),
-        TodayEnergy(api, device_name=config[CONF_NAME], sensor_name="Today Production",
-                    sensor_id="today_production")]
+        PowerSensorTotal(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Total Power",
+            sensor_id="total_power",
+        ),
+        PowerSensorTotalP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Total Power P1",
+            sensor_id="total_power_p1",
+        ),
+        PowerSensorTotalP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Total Power P2",
+            sensor_id="total_power_p2",
+        ),
+        LifetimeEnergy(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Lifetime Production",
+            sensor_id="lifetime_production",
+        ),
+        LifetimeEnergyP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Lifetime Production P1",
+            sensor_id="lifetime_production_p1",
+        ),
+        LifetimeEnergyP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Lifetime Production P2",
+            sensor_id="lifetime_production_p2",
+        ),
+        TodayEnergy(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Today Production",
+            sensor_id="today_production",
+        ),
+        TodayEnergyP1(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Today Production P1",
+            sensor_id="today_production_p1",
+        ),
+        TodayEnergyP2(
+            api,
+            device_name=config[CONF_NAME],
+            sensor_name="Today Production_p2",
+            sensor_id="today_production_p2",
+        ),
+    ]
 
     add_entities(sensors, True)
 
 
 class BaseSensor(SensorEntity):
     """Representation of an APsystem sensor."""
-    _attr_available = True
-    _attributes = {}
 
-    def __init__(self, api: APsystemsEZ1M, device_name: str, sensor_name: str, sensor_id: str):
+    _attr_available = True
+
+    def __init__(
+        self, api: APsystemsEZ1M, device_name: str, sensor_name: str, sensor_id: str
+    ):
         """Initialize the sensor."""
         self._api = api
         self._state = None
@@ -78,18 +131,22 @@ class BaseSensor(SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         return DeviceInfo(
-            identifiers={
-                ("apsystemsapi_local", self._device_name)
-            },
+            identifiers={("apsystemsapi_local", self._device_name)},
             name=self._device_name,
             manufacturer="APsystems",
             model="EZ1-M",
         )
 
-    @property
-    def extra_state_attributes(self):
-        """Return entity specific state attributes."""
-        return self._attributes
+    async def async_update_data(self):
+        try:
+            data = await self._api.get_output_data()
+            self.update_state(data)
+            self._attr_available = True
+        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
+            self._attr_available = False
+
+    def update_state(self, data):
+        raise NotImplementedError("Must be implemented by subclasses.")
 
 
 class BasePowerSensor(BaseSensor):
@@ -100,14 +157,27 @@ class BasePowerSensor(BaseSensor):
 
 
 class PowerSensorTotal(BasePowerSensor):
+    def update_state(self, data):
+        self._state = data.p1 + data.p2
+
     async def async_update(self):
-        try:
-            data = await self._api.get_output_data()
-            self._attributes = {"p1": data.p1, "p2": data.p2}
-            self._state = data.p1 + data.p2
-            self._attr_available = True
-        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
-            self._attr_available = False
+        await self.async_update_data()
+
+
+class PowerSensorTotalP1(BasePowerSensor):
+    def update_state(self, data):
+        self._state = data.p1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class PowerSensorTotalP2(BasePowerSensor):
+    def update_state(self, data):
+        self._state = data.p2
+
+    async def async_update(self):
+        await self.async_update_data()
 
 
 class BaseEnergySensor(BaseSensor):
@@ -119,24 +189,58 @@ class BaseEnergySensor(BaseSensor):
 class LifetimeEnergy(BaseEnergySensor):
     _attr_state_class = SensorStateClass.TOTAL
 
+    def update_state(self, data):
+        self._state = data.te1 + data.te2
+
     async def async_update(self):
-        try:
-            data = await self._api.get_output_data()
-            self._attributes = {"p1": data.te1, "p2": data.te2}
-            self._state = data.te1 + data.te2
-            self._attr_available = True
-        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
-            self._attr_available = False
+        await self.async_update_data()
+
+
+class LifetimeEnergyP1(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL
+
+    def update_state(self, data):
+        self._state = data.te1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class LifetimeEnergyP2(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL
+
+    def update_state(self, data):
+        self._state = data.te2
+
+    async def async_update(self):
+        await self.async_update_data()
 
 
 class TodayEnergy(BaseEnergySensor):
     _attr_state_class = SensorStateClass.TOTAL_INCREASING
 
+    def update_state(self, data):
+        self._state = data.e1 + data.e2
+
     async def async_update(self):
-        try:
-            data = await self._api.get_output_data()
-            self._attributes = {"p1": data.e1, "p2": data.e2}
-            self._state = data.e1 + data.e2
-            self._attr_available = True
-        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
-            self._attr_available = False
+        await self.async_update_data()
+
+
+class TodayEnergyP1(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+
+    def update_state(self, data):
+        self._state = data.e1
+
+    async def async_update(self):
+        await self.async_update_data()
+
+
+class TodayEnergyP2(BaseEnergySensor):
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+
+    def update_state(self, data):
+        self._state = data.e2
+
+    async def async_update(self):
+        await self.async_update_data()
