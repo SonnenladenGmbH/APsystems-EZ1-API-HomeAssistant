@@ -8,7 +8,7 @@
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/apsystemsapi_local",
   "homekit": {},
-  "version": "1.0.1",
+  "version": "2.0.1",
   "integration_type": "device",
   "iot_class": "local_polling",
   "requirements": ["apsystems-ez1==1.1.0"],
