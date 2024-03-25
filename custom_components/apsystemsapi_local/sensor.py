@@ -49,13 +49,13 @@ async def async_setup_entry(
         PowerSensorTotalP1(
             api,
             device_name=config[CONF_NAME],
-            sensor_name="Total Power P1",
+            sensor_name="Power P1",
             sensor_id="total_power_p1",
         ),
         PowerSensorTotalP2(
             api,
             device_name=config[CONF_NAME],
-            sensor_name="Total Power P2",
+            sensor_name="Power P2",
             sensor_id="total_power_p2",
         ),
         LifetimeEnergy(
@@ -91,7 +91,7 @@ async def async_setup_entry(
         TodayEnergyP2(
             api,
             device_name=config[CONF_NAME],
-            sensor_name="Today Production_p2",
+            sensor_name="Today Production P2",
             sensor_id="today_production_p2",
         ),
     ]
