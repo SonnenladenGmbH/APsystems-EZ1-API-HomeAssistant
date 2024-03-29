@@ -1,23 +1,25 @@
 from __future__ import annotations
-from aiohttp import client_exceptions
 
+import asyncio
+
+from aiohttp import client_exceptions
+from APsystemsEZ1 import APsystemsEZ1M, Status
 import voluptuous as vol
 
-from homeassistant.components.switch import (
-    SwitchEntity,
-    SwitchDeviceClass,
-    PLATFORM_SCHEMA
-)
-import homeassistant.helpers.config_validation as cv
 from homeassistant import config_entries
+from homeassistant.components.switch import (
+    PLATFORM_SCHEMA,
+    SwitchDeviceClass,
+    SwitchEntity,
+)
 from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from APsystemsEZ1 import APsystemsEZ1M, Status
+import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import DiscoveryInfoType
+
 from .const import DOMAIN
-import asyncio
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_IP_ADDRESS): cv.string,
@@ -80,6 +82,7 @@ class MaxPower(SwitchEntity):
             self._attr_available = True
         except ((client_exceptions.ClientConnectionError, asyncio.TimeoutError), asyncio.TimeoutError):
             self._attr_available = False
+        await self.async_update()
 
     async def async_turn_off(self, **kwargs):
         try:
@@ -87,6 +90,7 @@ class MaxPower(SwitchEntity):
             self._attr_available = True
         except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
             self._attr_available = False
+        await self.async_update()
 
     @property
     def device_info(self) -> DeviceInfo:

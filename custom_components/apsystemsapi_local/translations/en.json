@@ -9,7 +9,8 @@
                     "check": "Confirm and test the connection?"
                 },
                 "description": "Add your APsystems inverter:",
-                "title": "Add your device"
+                "title": "Add your device",
+                "update_interval": "After how many seconds should the inverter be polled?"
             }
         },
         "error": {

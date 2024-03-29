@@ -1,19 +1,21 @@
 import asyncio
+from typing import Any
 
+from aiohttp import client_exceptions
+from APsystemsEZ1 import APsystemsEZ1M
 import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
-from APsystemsEZ1 import APsystemsEZ1M
-from aiohttp import client_exceptions
 
-from .const import DOMAIN, LOGGER
-
+from .const import DOMAIN, LOGGER, UPDATE_INTERVAL
 
 DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_IP_ADDRESS): str,
         vol.Required(CONF_NAME): str,
-        vol.Optional("check", default=True): bool
+        vol.Optional("check", default=True): bool,
+        vol.Optional(UPDATE_INTERVAL, default=15): int
     }
 )
 

@@ -6,7 +6,8 @@
                 "data": {
                     "name": "Der Name deines Geräts",
                     "ip_address": "Die IP Adresse deines Geräts",
-                    "check": "Bestätige und teste die Verbindung?"
+                    "check": "Bestätige und teste die Verbindung?",
+                    "update_interval": "Nach wie vielen Sekund soll der Wechselrichter abgefragt werden?"
                 },
                 "description": "Füge deinen APsystems-Wechselrichter hinzu:",
                 "title": "Füge dein Gerät hinzu"

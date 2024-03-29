@@ -3,23 +3,23 @@ from __future__ import annotations
 import asyncio
 
 from aiohttp import client_exceptions
-
+from APsystemsEZ1 import APsystemsEZ1M
 import voluptuous as vol
 
+from homeassistant import config_entries
 from homeassistant.components.number import (
+    PLATFORM_SCHEMA,
     NumberDeviceClass,
     NumberEntity,
-    PLATFORM_SCHEMA
 )
-import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME
 from homeassistant.core import HomeAssistant
-from homeassistant import config_entries
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from APsystemsEZ1 import APsystemsEZ1M
-from .const import DOMAIN
+import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import DiscoveryInfoType
+
+from .const import DOMAIN
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_IP_ADDRESS): cv.string,
@@ -63,7 +63,7 @@ class MaxPower(NumberEntity):
         try:
             self._state = await self._api.get_max_power()
             self._attr_available = True
-        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
+        except (TimeoutError, client_exceptions.ClientConnectionError):
             self._attr_available = False
 
     @property
@@ -84,8 +84,9 @@ class MaxPower(NumberEntity):
         try:
             await self._api.set_max_power(int(value))
             self._attr_available = True
-        except (client_exceptions.ClientConnectionError, asyncio.TimeoutError):
+        except (TimeoutError, client_exceptions.ClientConnectionError):
             self._attr_available = False
+        await self.async_update()
 
     @property
     def device_info(self) -> DeviceInfo:
