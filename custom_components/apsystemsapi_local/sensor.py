@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import CONF_IP_ADDRESS, CONF_NAME, UnitOfEnergy, UnitOfPower
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.util import datetime as dt
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -101,7 +102,6 @@ async def async_setup_entry(
 class BaseSensor(CoordinatorEntity, SensorEntity):
     """Representation of an APsystem sensor."""
 
-
     def __init__(
         self,
         coordinator: ApSystemsDataCoordinator,
@@ -180,6 +180,33 @@ class BaseEnergySensor(BaseSensor):
     _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
     _attr_device_class = SensorDeviceClass.ENERGY
 
+    def __init__(
+        self, coordinator: ApSystemsDataCoordinator, device_name, sensor_name, sensor_id
+    ):
+        super().__init__(coordinator, device_name, sensor_name, sensor_id)
+        self._old_state: float = 0
+        self._base_state: float = 0
+        self._last_update: int = 0
+
+    def debounce(self, new_state):
+        try:
+            if self._old_state > new_state:
+                self._base_state = self._base_state + self._old_state
+        except TypeError:
+            pass
+
+        self._old_state = new_state
+
+        # reset basis each day
+        if self._last_update != dt.now().day:
+            self._last_update = dt.now().day
+            self._base_state = 0
+
+        if isinstance(new_state, (int, float)):
+            return new_state + self._base_state
+
+        return new_state
+
 
 class LifetimeEnergy(BaseEnergySensor):
     _attr_state_class = SensorStateClass.TOTAL
@@ -217,7 +244,9 @@ class TodayEnergy(BaseEnergySensor):
     @callback
     def _handle_coordinator_update(self):
         if self.coordinator.data is not None:
-            self._state = self.coordinator.data.e1 + self.coordinator.data.e2
+            self._state = self.debounce(
+                self.coordinator.data.e1 + self.coordinator.data.e2
+            )
         self.async_write_ha_state()
 
 
@@ -227,7 +256,7 @@ class TodayEnergyP1(BaseEnergySensor):
     @callback
     def _handle_coordinator_update(self):
         if self.coordinator.data is not None:
-            self._state = self.coordinator.data.e1
+            self._state = self.debounce(self.coordinator.data.e1)
         self.async_write_ha_state()
 
 
@@ -237,5 +266,5 @@ class TodayEnergyP2(BaseEnergySensor):
     @callback
     def _handle_coordinator_update(self):
         if self.coordinator.data is not None:
-            self._state = self.coordinator.data.e2
+            self._state = self.debounce(self.coordinator.data.e2)
         self.async_write_ha_state()
