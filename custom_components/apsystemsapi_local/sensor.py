@@ -145,9 +145,9 @@ class BaseSensor(CoordinatorEntity, SensorEntity):
 
 
 class BasePowerSensor(BaseSensor):
-    _device_class = SensorDeviceClass.POWER
+    _device_class = SensorDeviceClass.ENERGY
     _attr_native_unit_of_measurement = UnitOfPower.WATT
-    _attr_device_class = SensorDeviceClass.POWER
+    _attr_device_class = SensorDeviceClass.ENERGY
     _attr_state_class = SensorStateClass.MEASUREMENT
 
 
