@@ -1,5 +1,13 @@
 # APsystems EZ1 - Home Assistant Integration
 
+## Update
+> [!IMPORTANT]  
+> This repo isn't needed anymore. The integration is now available at [home-assistant.io/integrations/apsystems](https://www.home-assistant.io/integrations/apsystems). Please report issues [here](https://github.com/home-assistant/core/issues?q=is%3Aissue+is%3Aopen+label%3A%22integration%3A+apsystems%22). That's why this will be archived and nothing will happen in this repo anymore.
+
+The custom integration can therefore be disabled and uninstalled, eventhough this will keep working, but I'd still recommend to migrate over to profit from the better code.
+
+
+
 ## Overview
 
 - The APsystems EZ1 Home Assistant Integration can be used to interact with APsystems EZ1 Microinverters.
